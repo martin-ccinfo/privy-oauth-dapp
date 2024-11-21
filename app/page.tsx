@@ -1,101 +1,55 @@
-import Image from "next/image";
+// import Portal from "../components/graphics/portal";
 
-export default function Home() {
+import { PrivyClient } from "@privy-io/server-auth";
+import Head from "next/head";
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
+import LoginButton from "@/components/LoginButton";
+import WalletCard from "@/components/WalletCard";
+
+export default async function LoginPage() {
+  const cookieStore = await cookies();
+  const cookieAuthToken = cookieStore.get("privy-token")?.value;
+
+  // If no cookie is found, skip any further checks
+  if (cookieAuthToken) {
+    const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
+    const PRIVY_APP_SECRET = process.env.PRIVY_APP_SECRET;
+    const client = new PrivyClient(PRIVY_APP_ID!, PRIVY_APP_SECRET!);
+
+    try {
+      const claims = await client.verifyAuthToken(cookieAuthToken);
+      console.log({ claims });
+
+      // Redirect to dashboard if token is valid
+      redirect("/dashboard");
+    } catch (error) {
+      // Handle error if needed
+      console.error("Token verification failed:", error);
+    }
+  }
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <>
+      <Head>
+        <title>Login · Privy</title>
+      </Head>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      <main className="flex flex-col min-h-screen min-w-full">
+        <div className="flex bg-privy-light-blue flex-1 p-6 justify-center items-center">
+          <div>
+            <div className="mt-6 flex justify-center text-center">
+              <LoginButton />
+            </div>
+            {/* <div className="mt-6">
+              <WalletCard />
+            </div> */}
+          </div>
+        </div>
+        <div className="container mx-auto max-w-screen-lg">
+          <WalletCard />
         </div>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+    </>
   );
 }

@@ -1,0 +1,168 @@
+"use client";
+
+import {
+  usePrivy,
+  
+  WalletWithMetadata,
+} from "@privy-io/react-auth";
+import React from "react";
+// import {
+//   Connection,
+//   PublicKey,
+//   SystemProgram,
+//   Transaction,
+// } from "@solana/web3.js";
+
+const page = () => {
+  return (
+    <div>
+      <MyComponent />
+    </div>
+  );
+};
+
+export default page;
+
+const MyComponent = () => {
+  const { ready, authenticated, user } = usePrivy();
+  const wallet = user?.linkedAccounts.find(
+    (account): account is WalletWithMetadata =>
+      account.type === "wallet" &&
+      //   account.walletClientType === "privy" &&
+      account.chainType === "solana"
+  );
+
+  // const { wallets } = useSolanaWallets();
+
+  //   // Accessing the user's Solana wallet
+  //   const wallet = user?.linkedAccounts.find(
+  //     (account) =>
+  //       account.type === "wallet" &&
+  //       account.walletClientType === "privy" &&
+  //       account.chainType === "solana"
+  //   );
+
+  //   if (wallet) {
+  //     console.log(`Connected Solana address: ${user?.wallet?.address}`);
+  //   }
+
+  //   const sendTransaction = async () => {
+  //     if (wallet?.sendTransaction) {
+  //       const connection = new Connection("https://api.devnet.solana.com");
+  //       const transaction = new Transaction().add(
+  //         SystemProgram.transfer({
+  //           fromPubkey: wallet.address,
+  //           toPubkey: wallet.address,
+  //           lamports: 1000000,
+  //         })
+  //       );
+  //       const signature = await wallet.sendTransaction(transaction, connection);
+  //       console.log(signature);
+  //     }
+  //   };
+
+  const handleSendSOL = async () => {
+    // if (user?.wallet?.address == wallets[0].address) {
+    //   wallets[1].sendTransaction!(
+    //     new Transaction().add(
+    //       SystemProgram.transfer({
+    //         fromPubkey: new PublicKey(wallets[0].address),
+    //         toPubkey: new PublicKey(wallets[0].address),
+    //         lamports: 1000000,
+    //       })
+    //     ),
+    //     new Connection("https://api.devnet.solana.com")
+    //   );
+    // }
+  };
+  return (
+    <div>
+          <div>My connected solana address is: {wallet?.address}</div>
+          {ready && authenticated && <p>User {user?.id} is logged in.</p>}
+      <pre>{JSON.stringify(user, null, 4)}</pre>
+
+      <button onClick={handleSendSOL}>Send SOL</button>
+      {/* {wallets.map((wallet) => (
+              <div key={wallet.address}>
+                  <p>{wallet.address}</p>
+                  <pre>{JSON.stringify(wallet, null, 4)}</pre>
+              </div>
+          ))}
+          <pre>{JSON.stringify(user, null, 4)}</pre> */}
+      {/* {wallet ? (
+        <p>Connected Solana address: {user?.wallet?.address}</p>
+      ) : (
+        <p>No Solana wallet connected.</p>
+      )} */}
+      
+    </div>
+  );
+};
+
+// import { Connection, clusterApiUrl, Transaction } from "@solana/web3.js";
+// import { connect } from "http2";
+// import { useSolanaWallets } from "@privy-io/react-auth";
+// import toast from "react-hot-toast";
+// // import { getScraftProgram } from "@/anchor/scraft";
+// // import Wallet from "@/components/privy/wallet";
+
+// // export function getScraftProgram(provider: any) {
+// //   const program = new Program<Scraft>(idl as unknown as Scraft, provider);
+// //   return program;
+// // }
+
+// export default function Page() {
+//   const { wallets } = useSolanaWallets();
+//   const solanaWallet = wallets[0];
+//   const connection = new Connection(clusterApiUrl("devnet"));
+//   //   const doStuff = async () => {
+//   //     if (solanaWallet.sendTransaction) {
+//   //       const prov = await solanaWallet.getProvider();
+
+//   //       const program = getScraftProgram(prov);
+//   //       const tx = await program.methods.initializePlayer("bob").transaction();
+//   //       console.log(solanaWallet);
+//   //       solanaWallet.sendTransaction(tx, connection);
+//   //     }
+//   //   };
+
+//   return (
+//     <div className="mx-auto w-full flex flex-col justify-center items-center pt-20">
+//       {/* <Wallet /> */}
+//       <button
+//         className="bg-blue-500 text-white p-4 rounded-lg mt-8"
+//         onClick={async () => {
+//           toast("do stuff");
+//           //   await doStuff();
+//         }}
+//       >
+//         Test
+//       </button>
+
+//       <pre>{JSON.stringify(wallets, null, 4)}</pre>
+//     </div>
+//   );
+// }
+
+// // import React from "react";
+// // import WalletCard from "@/components/WalletCard";
+
+// // const ProfilePage = () => {
+// // //   // Initialize connection instance with custom SVM RPC URL
+// // //   let connection = new Connection("insert-custom-SVM-rpc-url");
+
+// // //   // Build out the transaction object for your desired program
+// // //   // https://solana-labs.github.io/solana-web3.js/classes/Transaction.html
+// // //   let transaction = new Transaction();
+
+// // //   // Send transaction on custom SVM
+// // //   console.log(await wallet.sendTransaction!(transaction, connection));
+
+// //   return (
+// //     <div>
+// //       <WalletCard />
+// //     </div>
+// //   );
+// // };
+
+// // export default ProfilePage;
